@@ -4,7 +4,7 @@ import { View, Image, Text } from '@tarojs/components';
 import { fetch } from 'whatwg-fetch';
 import jsonp from 'fetch-jsonp';
 import './index.less';
-const print = function (value) {
+const print = function(value) {
   console.log(value);
 };
 class Index extends Component {
@@ -35,7 +35,7 @@ class Index extends Component {
     this.fetch_example();
     this.jsonp_example();
   }
-  componentDidUpdate(prevProps, prevState, snapshot) { }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
   isReadCountShow(readCount) {
     return readCount > 300;
   }

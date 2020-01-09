@@ -54,6 +54,8 @@ module.exports = function (schema, option) {
     const parsedStyles = [];
 
     for (let key in style) {
+      const name = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLocaleLowerCase();
+      const value = style[key];
       switch (key) {
         case 'fontSize':
         case 'marginTop':
@@ -77,10 +79,10 @@ module.exports = function (schema, option) {
         case 'borderTopRightRadius':
         case 'borderTopLeftRadius':
         case 'borderRadius':
-          const name = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLocaleLowerCase();
-          const value = style[key];
           parsedStyles.push(`${name}: ${value}`)
           break;
+        default:
+          parsedStyles.push(`${name}: ${value}`)
       }
     }
     return parsedStyles;
@@ -354,10 +356,12 @@ module.exports = function (schema, option) {
 
 
   // 输出外部类样式
-  function printOuterStyle() {
+  function printOuterStyle(style) {
     let result = '';
     for (let key in style) {
-      result += `.${key} { ${style[key].join(';')} } \n`
+      result += `.${key} {
+         ${style[key].join(';')} 
+        } \n`
     }
     return result;
   }
