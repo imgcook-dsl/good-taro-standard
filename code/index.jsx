@@ -4,7 +4,7 @@ import { View, Image, Text } from '@tarojs/components';
 import { fetch } from 'whatwg-fetch';
 import jsonp from 'fetch-jsonp';
 import './index.less';
-const print = function(value) {
+const print = function (value) {
   console.log(value);
 };
 class Index extends Component {
@@ -35,7 +35,7 @@ class Index extends Component {
     this.fetch_example();
     this.jsonp_example();
   }
-  componentDidUpdate(prevProps, prevState, snapshot) {}
+  componentDidUpdate(prevProps, prevState, snapshot) { }
   isReadCountShow(readCount) {
     return readCount > 300;
   }
@@ -75,12 +75,15 @@ class Index extends Component {
               key={item.index}
             >
               <View className="bd">
-                <Image className="layer" src={'https://img.alicdn.com/tfs/TB1bLoWoYH1gK0jSZFwXXc7aXXa-684-684.png'} />
-                <Image className="bg" src={item.coverImage} />
+                <Image
+                  className="layer"
+                  src={require('https://img.alicdn.com/tfs/TB1bLoWoYH1gK0jSZFwXXc7aXXa-684-684.png')}
+                />
+                <Image className="bg" src={require(item.coverImage)} />
                 <View className="wrap">
                   <Image
                     className="riverdinwei"
-                    src={'https://img.alicdn.com/tfs/TB1mtZRoVT7gK0jSZFpXXaTkpXa-28-36.png'}
+                    src={require('https://img.alicdn.com/tfs/TB1mtZRoVT7gK0jSZFpXXaTkpXa-28-36.png')}
                   />
                   <Text className="distance">距离500m</Text>
                 </View>
@@ -90,14 +93,17 @@ class Index extends Component {
               </View>
               <View className="ft">
                 <View className="block">
-                  <Image className="xianjin" src={'https://img.alicdn.com/tfs/TB1OvsYoW61gK0jSZFlXXXDKFXa-60-60.png'} />
+                  <Image
+                    className="xianjin"
+                    src={require('https://img.alicdn.com/tfs/TB1OvsYoW61gK0jSZFlXXXDKFXa-60-60.png')}
+                  />
                   <Text className="fashionHome">{item.user.userName}</Text>
                 </View>
                 {this.isReadCountShow(item.readCount) && (
                   <View className="group">
                     <Image
                       className="favorite"
-                      src={'https://img.alicdn.com/tfs/TB1arwYo7T2gK0jSZFkXXcIQFXa-46-44.png'}
+                      src={require('https://img.alicdn.com/tfs/TB1arwYo7T2gK0jSZFkXXcIQFXa-46-44.png')}
                     />
                     <Text className="num">{item.readCount}</Text>
                   </View>
