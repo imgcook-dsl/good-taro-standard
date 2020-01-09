@@ -10,10 +10,10 @@ const data = require('./data');
 
 const vm = new NodeVM({
   console: 'inherit',
-  sandbox: {}
+  sandbox: {},
 });
 
-co(function*() {
+co(function* () {
   const xtplRender = thunkify(xtpl.render);
   const code = fs.readFileSync(
     path.resolve(__dirname, '../src/index.js'),
@@ -27,7 +27,7 @@ co(function*() {
       viewportWidth: 375
     },
     utils: {
-      print: function(value) {
+      print: function (value) {
         console.log(value);
       }
     }
@@ -51,6 +51,6 @@ co(function*() {
 
     const prettierRes = prettier.format(ret, prettierOpt);
 
-    fs.writeFileSync(path.join(__dirname,'../code/result.js'), prettierRes);
+    fs.writeFileSync(path.join(__dirname, '../code/result.js'), prettierRes);
   }
 });

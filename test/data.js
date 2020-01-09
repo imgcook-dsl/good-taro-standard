@@ -379,7 +379,7 @@ module.exports = {
       console.log('super props');
     },
     "componentDidUpdate": (prevProps, prevState, snapshot) => {
-      
+
     }
   },
   "dataSource": {

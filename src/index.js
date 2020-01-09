@@ -50,42 +50,34 @@ module.exports = function (schema, option) {
   };
 
   // convert to responsive unit, such as vw
-  const parseStyle = (style) => {
+  const parseStyle = (style, type) => {
     const parsedStyles = [];
+    const exceptRnStyles = [];
 
     for (let key in style) {
       const name = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLocaleLowerCase();
       const value = style[key];
+
+      if (type === 'text' && (key === 'width' || key === 'height')) {
+        break;
+      }
+
       switch (key) {
-        case 'fontSize':
-        case 'marginTop':
-        case 'marginBottom':
-        case 'paddingTop':
-        case 'paddingBottom':
-        case 'height':
-        case 'top':
-        case 'bottom':
-        case 'width':
-        case 'maxWidth':
-        case 'left':
-        case 'right':
-        case 'paddingRight':
-        case 'paddingLeft':
-        case 'marginLeft':
-        case 'marginRight':
-        case 'lineHeight':
-        case 'borderBottomRightRadius':
-        case 'borderBottomLeftRadius':
-        case 'borderTopRightRadius':
-        case 'borderTopLeftRadius':
-        case 'borderRadius':
-          parsedStyles.push(`${name}: ${value}`)
+        case 'whiteSpace':
+        case 'boxSizing':
+        case 'backgroundImage':
+          exceptRnStyles.push(`${name}: ${value}`);
           break;
         default:
-          parsedStyles.push(`${name}: ${value}`)
+          parsedStyles.push(`${name}: ${value}`);
       }
     }
-    return parsedStyles;
+
+    if (exceptRnStyles.length > 0) {
+      exceptRnStyles.unshift('/*  #ifndef rn */\n');
+      exceptRnStyles.push('/*  #endif */\n');
+    }
+    return parsedStyles.concat(exceptRnStyles);
   }
 
   // parse function, return params and content
@@ -218,7 +210,7 @@ module.exports = function (schema, option) {
     const classString = className ? ` className='${className}'` : '';
 
     if (className) {
-      style[className] = parseStyle(schema.props.style);
+      style[className] = parseStyle(schema.props.style, type);
     }
 
     componentNames[nameMapping[type]] = true;
