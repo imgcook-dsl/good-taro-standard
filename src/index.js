@@ -22,6 +22,9 @@ module.exports = function (schema, option) {
   // Classes 
   const classes = [];
 
+  // import 组件名称列表
+  const componentNames = {};
+
   const isExpression = (value) => {
     return /^\{\{.*\}\}$/.test(value);
   }
@@ -216,6 +219,8 @@ module.exports = function (schema, option) {
       style[className] = parseStyle(schema.props.style);
     }
 
+    componentNames[nameMapping[type]] = true;
+
     let xml;
     let props = '';
 
@@ -348,14 +353,14 @@ module.exports = function (schema, option) {
   transform(schema);
 
 
-  function getOuterStyle() {
+  // 输出外部类样式
+  function printOuterStyle() {
     let result = '';
     for (let key in style) {
       result += `.${key} { ${style[key].join(';')} } \n`
     }
     return result;
   }
-
 
   return {
     panelDisplay: [
@@ -364,6 +369,7 @@ module.exports = function (schema, option) {
         panelValue: prettier.format(`
           'use strict';
           import Taro, { Component } from '@tarojs/taro';
+          import { ${Object.keys(componentNames).join(', ')} } from '@tarojs/components';
           ${imports.join('\n')}
           import './index.less';
           ${utils.join('\n')}
@@ -378,7 +384,7 @@ module.exports = function (schema, option) {
       },
       {
         panelName: `index.less`,
-        panelValue: prettier.format(`${getOuterStyle(style)}`, {
+        panelValue: prettier.format(`${printOuterStyle(style)}`, {
           parser: 'less',
           printWidth: 120,
         }),

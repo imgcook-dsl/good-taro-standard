@@ -1,5 +1,6 @@
 'use strict';
 import Taro, { Component } from '@tarojs/taro';
+import { View, Image, Text } from '@tarojs/components';
 import { fetch } from 'whatwg-fetch';
 import jsonp from 'fetch-jsonp';
 import './index.less';
