@@ -74,8 +74,8 @@ module.exports = function (schema, option) {
     }
 
     if (exceptRnStyles.length > 0) {
-      exceptRnStyles.unshift('/*  #ifndef rn */\n');
-      exceptRnStyles.push('/*  #endif */\n');
+      exceptRnStyles.unshift('\n/*  #ifndef rn */\n');
+      exceptRnStyles.push('\n/*  #endif */\n');
     }
     return parsedStyles.concat(exceptRnStyles);
   }
