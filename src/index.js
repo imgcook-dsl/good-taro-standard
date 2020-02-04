@@ -66,6 +66,9 @@ module.exports = function (schema, option) {
         case 'whiteSpace':
         case 'boxSizing':
         case 'backgroundImage':
+        case 'borderBottomStyle':
+        case 'textOverflow':
+        case 'visibility':
           exceptRnStyles.push(`${name}: ${value}`);
           break;
         default:
