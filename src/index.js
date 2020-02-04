@@ -59,7 +59,7 @@ module.exports = function (schema, option) {
       const value = style[key];
 
       if (type === 'text' && (key === 'width' || key === 'height')) {
-        break;
+        continue;
       }
 
       switch (key) {
@@ -214,7 +214,11 @@ module.exports = function (schema, option) {
     const classString = className ? ` className='${className}'` : '';
 
     if (className) {
+
       style[className] = parseStyle(schema.props.style, type);
+      if (className === 'txt') {
+        console.log(schema.props.style, type, style[className]);
+      }
     }
 
     componentNames[nameMapping[type]] = true;
