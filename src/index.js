@@ -69,6 +69,7 @@ module.exports = function (schema, option) {
         case 'borderBottomStyle':
         case 'textOverflow':
         case 'visibility':
+        case 'filter':
           exceptRnStyles.push(`${name}: ${value}`);
           break;
         default:
