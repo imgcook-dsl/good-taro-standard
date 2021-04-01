@@ -227,7 +227,11 @@ module.exports = function (schema, option) {
         props += ` ${key}={${parseProps(schema.props[key])}}`;
       }
     })
-
+    let isContainer = false;
+    if (schema.componentName === 'Page' || schema.componentName === 'Block') {
+      isContainer = true;
+    }
+    
     // 设置标签类型
     switch (type) {
       case 'text':
@@ -252,10 +256,10 @@ module.exports = function (schema, option) {
     if (schema.loop) {
       xml = parseLoop(schema.loop, schema.loopArgs, xml)
     }
-    if (schema.condition) {
+    if (schema.condition && !isContainer) {
       xml = parseCondition(schema.condition, xml);
     }
-    if (schema.loop || schema.condition) {
+    if (schema.loop || (schema.condition && !isContainer)) {
       xml = `{${xml}}`;
     }
 
@@ -337,7 +341,6 @@ module.exports = function (schema, option) {
         result += generateRender(schema);
       }
     }
-
     return result;
   };
 
