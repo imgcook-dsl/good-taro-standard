@@ -109,7 +109,7 @@ module.exports = function (schema, option) {
       if (isReactNode) {
         return value;
       } else {
-        return `'${value}'`;
+        return `"${value}"`;
       }
     } else if (typeof value === 'function') {
       const { params, content } = parseFunction(value);
@@ -223,7 +223,7 @@ module.exports = function (schema, option) {
     let props = '';
 
     Object.keys(schema.props).forEach((key) => {
-      if (['className', 'style', 'text', 'src'].indexOf(key) === -1) {
+      if (['className', 'style', 'text', 'src', 'lines'].indexOf(key) === -1) {
         props += ` ${key}={${parseProps(schema.props[key])}}`;
       }
     })
