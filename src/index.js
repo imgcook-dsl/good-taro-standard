@@ -240,7 +240,7 @@ module.exports = function (schema, option) {
         break;
       case 'image':
         const source = parseProps(schema.props.src);
-        xml = `<${nameMapping[type]}${classString}${props} src={require(${source})} />`;
+        xml = `<${nameMapping[type]}${classString}${props} src=${source} />`;
         break;
       case 'div':
       case 'page':
