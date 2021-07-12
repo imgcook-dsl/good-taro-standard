@@ -210,12 +210,13 @@ module.exports = function (schema, option) {
   // generate render xml
   const generateRender = (schema) => {
     const type = schema.componentName.toLowerCase();
+    const componentStyleString = parseStyle(schema.props.style, type);
     const className = schema.props && schema.props.className;
     const classString = className ? ` className='${className}'` : '';
-
     if (className) {
-      style[className] = parseStyle(schema.props.style, type);
+      style[className] = componentStyleString;
     }
+    const styleString = (!className&&componentStyleString) ? ` style='${componentStyleString}'` : ""
 
     componentNames[nameMapping[type]] = true;
 
@@ -236,19 +237,19 @@ module.exports = function (schema, option) {
     switch (type) {
       case 'text':
         const innerText = parseProps(schema.props.text, true);
-        xml = `<${nameMapping[type]}${classString}${props}>${innerText}</${nameMapping[type]}>`;
+        xml = `<${nameMapping[type]}${classString||styleString}${props}>${innerText}</${nameMapping[type]}>`;
         break;
       case 'image':
         const source = parseProps(schema.props.src);
-        xml = `<${nameMapping[type]}${classString}${props} src=${source} />`;
+        xml = `<${nameMapping[type]}${classString||styleString}${props} src=${source} />`;
         break;
       case 'div':
       case 'page':
       case 'block':
         if (schema.children && schema.children.length) {
-          xml = `<${nameMapping[type]}${classString}${props}>${transform(schema.children)}</${nameMapping[type]}>`;
+          xml = `<${nameMapping[type]}${classString||styleString}${props}>${transform(schema.children)}</${nameMapping[type]}>`;
         } else {
-          xml = `<${nameMapping[type]}${classString}${props} />`;
+          xml = `<${nameMapping[type]}${classString||styleString}${props} />`;
         }
         break;
     }
@@ -365,6 +366,50 @@ module.exports = function (schema, option) {
     return result;
   }
 
+   /**
+     *  输出外部类嵌套样式: 将css对象多维数组 格式化css文本输出
+     * @param {*} styleObject style层级对象
+     * @returns 
+    */
+   function printOuterLevelStyle(styleObject) {
+      let result = '';
+      const styleKey = styleObject.parentClassName;
+      const itemStype =  style[styleKey]? `${style[styleKey].join(';')};` : ""
+      const subsStyles = styleObject.sublist ? (styleObject.sublist.map((item,index)=>{
+        return printOuterLevelStyle(item)
+      }).join("\n")) : ''
+
+      if(styleKey){
+        result += `\n.${styleKey} {
+          ${itemStype}
+          ${subsStyles}
+        }`
+      }else{
+        result += `\n
+          ${itemStype}
+          ${subsStyles}
+        `
+      }
+      return result
+   }
+
+  /**
+   * 返回 style 格式化为 style层级对象 
+   * @param {*} schema 
+   * @param {*} parentClassName 
+   * @returns 
+   */
+  function parseLevelStyle(schema, parentClassName){
+      return {
+        "parentClassName": parentClassName,
+        "style":"",
+        "sublist": schema.children ? schema.children.map(item => {
+          const subItem = parseLevelStyle(item, item.props.className,)
+          return subItem
+        }) : null,
+      }
+  }
+
   return {
     panelDisplay: [
       {
@@ -388,6 +433,14 @@ module.exports = function (schema, option) {
       {
         panelName: `index.less`,
         panelValue: prettier.format(`${printOuterStyle(style)}`, {
+          parser: 'less',
+          printWidth: 120,
+        }),
+        panelType: 'less'
+      },
+      {
+        panelName: `indexLevel.less`,
+        panelValue: prettier.format(`${printOuterLevelStyle(parseLevelStyle(schema, schema.props.className))}`, {
           parser: 'less',
           printWidth: 120,
         }),
