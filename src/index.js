@@ -4,7 +4,8 @@ const nameMapping = {
   'text': 'Text',
   'div': 'View',
   'image': 'Image',
-  'block': 'View'
+  'block': 'View',
+  'input': 'Input'
 }
 
 module.exports = function (schema, option) {
@@ -241,6 +242,9 @@ module.exports = function (schema, option) {
       case 'image':
         const source = parseProps(schema.props.src);
         xml = `<${nameMapping[type]}${classString}${props} src=${source} />`;
+        break;
+      case 'input':
+        xml = `<${nameMapping[type]}${classString}${props} />`;
         break;
       case 'div':
       case 'page':
