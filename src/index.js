@@ -5,7 +5,12 @@ const nameMapping = {
   'div': 'View',
   'image': 'Image',
   'block': 'View',
-  'input': 'Input'
+  'input': 'Input',
+  'upload': 'Upload',
+  'radiogroup': 'RadioGroup',
+  'switch': 'Switch',
+  'datepicker': 'DatePicker',
+  'button': 'Button'
 }
 
 module.exports = function (schema, option) {
@@ -115,6 +120,10 @@ module.exports = function (schema, option) {
     } else if (typeof value === 'function') {
       const { params, content } = parseFunction(value);
       return `(${params}) => {${content}}`;
+    } else if (typeof value === 'object') {
+      return JSON.stringify(value);
+    } else if (typeof value === 'boolean') {
+      return value;
     }
   }
 
@@ -244,7 +253,18 @@ module.exports = function (schema, option) {
         xml = `<${nameMapping[type]}${classString}${props} src=${source} />`;
         break;
       case 'input':
+      case 'upload':
+      case 'switch':
+      case 'radiogroup':
+      case 'datepicker':
         xml = `<${nameMapping[type]}${classString}${props} />`;
+        break;
+      case 'button':
+        if (schema.children && typeof schema.children === 'string') {
+          xml = `<${nameMapping[type]}${classString}${props}>${schema.children}</${nameMapping[type]}>`;
+        } else {
+          xml = `<${nameMapping[type]}${classString}${props} />`;
+        }
         break;
       case 'div':
       case 'page':
